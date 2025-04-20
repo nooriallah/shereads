@@ -1,0 +1,67 @@
+@import url('./style.css');
+/*#preloader {*/
+/*    display: none !important;*/
+/*}*/
+.brand-title h3 {
+    color: white;
+    font-size: 22px;
+}
+
+
+.filter_wrapper a, .filter_wrapper #filter_dropdown  {
+    width: 172px;
+    height: 47px;
+}
+
+
+
+/* Books */
+.book_wrapper h6 {
+    color: var(--primary);
+    font-size: 19px;
+}
+.book_wrapper h6 span {
+    color: var(--primary-300);
+    font-size: 16px;
+}
+.book_wrapper .details .btn_read {
+    font-size: 14px !important;
+}
+.book_wrapper .details .btn_read:hover {
+    color: #fff;
+    background-color: var(--primary);
+}
+
+
+
+
+
+
+/* For mobile */
+
+@media  only screen and (max-width: 768px) {
+    .hamburger {
+        top: 1rem;
+    }
+    /* Logo background */
+    [data-sidebar-position="fixed"][data-layout="vertical"] .nav-header {
+        background-color: var(--primary);
+    }
+
+    /* Side li color */
+    [data-sidebar-style="overlay"] .dlabnav .metismenu > li.mm-active {
+        background-color: var(--primary-100);
+        padding: 0;
+    }
+    .dlabnav .metismenu > li.mm-active > a {
+        color: var(--primary) !important;
+        border-radius: 0;
+        background: none;
+    }
+    #main-wrapper.menu-toggle .dlabnav .metismenu > li.mm-active > a svg path {
+        fill: var(--primary) !important;
+    }
+    [data-sidebar-style="overlay"] .dlabnav .metismenu > li > a {
+        color: var(--white);
+    }
+}
