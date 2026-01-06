@@ -34,9 +34,9 @@ Route::group(["middleware" => [
     "verified",
     "admin",
 ]], function () {
-    Route::get("/dashboard/addbook", function () {
-        return "Add book route";
-    });
+    
 
     Route::get("/dashboard/categories", \App\Livewire\Backend\Category::class)->name("categories");
+    Route::get("/dashboard/users", \App\Livewire\Backend\User::class)->name("users");
+    
 });

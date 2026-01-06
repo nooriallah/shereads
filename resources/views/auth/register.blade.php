@@ -41,6 +41,7 @@
                         @enderror
                         <input type="hidden" name="role" value="subscriber">
                         <input type="submit" value="Sign Up" />
+                        
                     </form>
                     <p class="text-center">
                         Already have an account? <a href={{ route('login') }} class="text-decoration-none">Sign In</a>
