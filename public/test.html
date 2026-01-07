@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+
+        
+        <div class="row">
+
+
+            <div class="col-lg-6">
+                <div class="from-place mb-30">
+                    <div class="origin-place">
+                        <p>Name</p>
+                        [text* name autocomplete:name]
+                    </div>
+                    <div class="origin-place mb-30">
+                        <p>Email</p>
+                        [email* email autocomplete:email]
+                    </div>
+                    <div class="origin-place mb-30">
+                        <p>Services</p>
+                        [select* services "Select Service" "Personal storage"
+                        "Buseniss Storage" "Moving Services"]
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-lg-6">
+                <div class="from-place mb-30">
+                    <div class="origin-place mb-30">
+                        <p>Company (Optional)</p>
+                        [text company autocomplete:company]
+                    </div>
+                </div>
+                <div class="from-place mb-30">
+                    <div class="origin-place mb-30">
+                        <p>Phone</p>
+                        [text* phone autocomplete:phone]
+                    </div>
+                </div>
+                <div class="from-place mb-30">
+                    <div class="origin-place mb-30">
+                        <p>Detials (Optional)</p>
+                        [textarea details autocomplete:details]
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+       
+       
+    </body>
+</html>

@@ -193,6 +193,7 @@ Preloader end
                             <span class="nav-text">Dashboard</span>
                         </a>
                     </li>
+                    
                     <li>
                         <a href="#" aria-expanded="false">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"

@@ -36,6 +36,13 @@ class User extends Component
     ];
 
     public $edit_user = false;
+    public $show_user_list = true;
+
+
+    public function showUserForm()
+    {
+        $this->show_user_list = !$this->show_user_list;
+    }
 
 
     // Function to create user
@@ -76,6 +83,8 @@ class User extends Component
 
     public function render()
     {
-        return view('livewire.backend.user');
+        return view('livewire.backend.user', [
+            'users' => UserModel::all(),
+        ]);
     }
 }
