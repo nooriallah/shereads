@@ -6,54 +6,44 @@
         <title>Document</title>
     </head>
     <body>
-
-        
-        <div class="row">
-
-
+        <div class="row" >
+            <style></style>
             <div class="col-lg-6">
-                <div class="from-place mb-30">
-                    <div class="origin-place">
-                        <p>Name</p>
-                        [text* name autocomplete:name]
-                    </div>
-                    <div class="origin-place mb-30">
-                        <p>Email</p>
-                        [email* email autocomplete:email]
-                    </div>
-                    <div class="origin-place mb-30">
-                        <p>Services</p>
-                        [select* services "Select Service" "Personal storage"
-                        "Buseniss Storage" "Moving Services"]
-                    </div>
+                <div class="origin-place">
+                    <p>Name *</p>
+                    [text* full-name placeholder "Your name"]
+                </div>
+
+                <div class="origin-place mb-30">
+                    <p>Email *</p>
+                    [email* email-address placeholder "Your working email"]
+                </div>
+
+                <div class="origin-place mb-30">
+                    <p>Services</p>
+                    [select* service include_blank "Personal storage" "Business
+                    storage" "Moving services"]
                 </div>
             </div>
 
-
             <div class="col-lg-6">
-                <div class="from-place mb-30">
-                    <div class="origin-place mb-30">
-                        <p>Company (Optional)</p>
-                        [text company autocomplete:company]
-                    </div>
+                <div class="origin-place mb-30">
+                    <p>Company (Optional)</p>
+                    [text company-name placeholder "Your company name"]
                 </div>
-                <div class="from-place mb-30">
-                    <div class="origin-place mb-30">
-                        <p>Phone</p>
-                        [text* phone autocomplete:phone]
-                    </div>
+
+                <div class="origin-place mb-30">
+                    <p>Phone *</p>
+                    [tel* phone-number placeholder "Your actual phone number"]
                 </div>
-                <div class="from-place mb-30">
-                    <div class="origin-place mb-30">
-                        <p>Detials (Optional)</p>
-                        [textarea details autocomplete:details]
-                    </div>
+
+                <div class="origin-place mb-30">
+                    <p>Details (Optional)</p>
+                    [textarea message placeholder "details"]
                 </div>
             </div>
 
+            [submit "Get your quote"]
         </div>
-        
-       
-       
     </body>
 </html>

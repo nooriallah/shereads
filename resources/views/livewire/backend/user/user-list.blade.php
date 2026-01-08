@@ -29,11 +29,11 @@
                 <td>{{ $user->created_at->format('d M Y') }}</td>
                 <td class="d-flex gap-1">
 
-                    <button class="btn btn-primay shadow btn-xs sharp" wire:click="editCategory({{ $user->id }})">
+                    <button class="btn btn-primay shadow btn-xs sharp" wire:click="editUser({{ $user->id }})">
                         <i class="fa fa-edit"></i>
                     </button>
 
-                    <button wire:click="deleteCategory({{ $user->id }})" wire:confirm='Are you sure?'
+                    <button wire:click="deleteUser({{ $user->id }})" wire:confirm='Are you sure?'
                         class="btn btn-danger shadow btn-xs sharp">
                         <i class="fa fa-trash"></i>
                     </button>

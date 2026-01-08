@@ -42,6 +42,15 @@ class User extends Component
     public function showUserForm()
     {
         $this->show_user_list = !$this->show_user_list;
+        $this->edit_user = false;
+        // Reset all form fields
+        $this->full_name = '';
+        $this->email = '';
+        $this->password = '';
+        $this->password_confirmation = '';
+        $this->role = '';
+        $this->profile_photo = null;
+        // reset([$this->full_name, $this->email, $this->password, $this->password_confirmation, $this->role, $this->profile_photo]);
     }
 
 
@@ -58,7 +67,7 @@ class User extends Component
         ];
 
         if ($this->profile_photo) {
-            $userData['profile_photo_path'] = $this->profile_photo->store('profile-photos', 'public');
+            $userData['profile_photo'] = $this->profile_photo->store('/images/profile-photos', 'public');
         }
 
         UserModel::create($userData);
@@ -77,9 +86,68 @@ class User extends Component
 
 
 
+    // Method for editing user on current form if user exists and click over edit button it should open the same form with data
+    public function editUser($id)
+    {
+        $user = UserModel::find($id);
+        if ($user) {
+            $this->full_name = $user->full_name;
+            $this->email = $user->email;
+            $this->role = $user->role;
+            $this->edit_user = true;
+            $this->dispatch('openEditUserModal');
+
+            $this->edit_user = true;
+            $this->show_user_list = false;
+        } else {
+            session()->flash('error', 'User not found.');
+        }
+    }
 
 
+    // Method to update user
+    public function updateUser()
+    {
+        // dd("Update clicked");
 
+        $this->validate([
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . UserModel::where('email', $this->email)->value('id'),
+            'role' => 'required|string|in:admin,subscriber,editor,visitor',
+            'profile_photo' => 'nullable|image|max:1024', // 1MB Max
+            'password' => 'nullable|string|min:8|confirmed',
+        ]);
+        $user = UserModel::where('email', $this->email)->first();
+        if ($user) {
+            $updateData = [
+                'full_name' => $this->full_name,
+                'email' => $this->email,
+                'role' => $this->role,
+            ];
+            // check if profile photo is set then update otherwise not 
+            if ($this->profile_photo) {
+                $updateData['profile_photo'] = $this->profile_photo->store('/backend/images/users', 'public');
+            }
+            // check if password is set then update otherwise not
+            if ($this->password) {
+                $updateData['password'] = bcrypt($this->password);
+            }
+
+            $user->update($updateData);
+
+            // Reset form fields
+            $this->full_name = '';
+            $this->email = '';
+            $this->role = '';
+            $this->profile_photo = null;
+            $this->edit_user = false;
+
+            // Show success message
+            session()->flash('message', 'User updated successfully.');
+        } else {
+            session()->flash('error', 'User not found.');
+        }
+    }
 
     public function render()
     {
