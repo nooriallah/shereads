@@ -36,7 +36,7 @@ class User extends Component
     ];
 
     public $edit_user = false;
-    public $show_user_list = true;
+    public $show_user_list = false;
 
 
     public function showUserForm()

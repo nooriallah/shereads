@@ -3,8 +3,8 @@
     @csrf
     <div class="row">
 
-        <div wire:loading.flex class="position-relative">
-            <div class="loading-model d-flex align-items-center justify-content-center position-absolute top-0 start-0 w-100 h-100 z-10"
+        <div class="position-absolute top-0 start-0 w-100 h-100 z-10" wire:loading.flex>
+            <div class="loading-model d-flex align-items-center justify-content-center w-100 h-100"
                 style="background-color: #3333338c">
                 <div class="data-wrapper">
                     <div class="spinner-border"
@@ -77,7 +77,7 @@
                         <img src="{{ $profile_photo->temporaryUrl() }}" alt="Profile Photo" width="100px" />
                     </div>
                 @endif
-
+                {{-- <h4 wire:loading.flex wire:target='profile_photo'>Loading...</h4> --}}
                 <input type="file" accept=".jpg, .jpeg, .png" wire:model="profile_photo"
                     class="form-control form-control-lg" id="profile_photo" />
             </div>
@@ -108,5 +108,6 @@
                     class="btn btn-primary py-3 px-5 d-inline-block">{{ $edit_user ? 'Update User' : 'Create User' }}</button>
             </div>
         </div>
+        
     </div>
 </form>
