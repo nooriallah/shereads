@@ -5,6 +5,7 @@ namespace App\Livewire\Backend;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use App\Models\User as UserModel;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
 use Livewire\WithFileUploads;
 
@@ -36,7 +37,7 @@ class User extends Component
     ];
 
     public $edit_user = false;
-    public $show_user_list = false;
+    public $show_user_list = true;
 
 
     public function showUserForm()
@@ -50,7 +51,6 @@ class User extends Component
         $this->password_confirmation = '';
         $this->role = '';
         $this->profile_photo = null;
-        // reset([$this->full_name, $this->email, $this->password, $this->password_confirmation, $this->role, $this->profile_photo]);
     }
 
 
@@ -58,7 +58,6 @@ class User extends Component
     public function createUser()
     {
         $this->validate();
-
         $userData = [
             'full_name' => $this->full_name,
             'email' => $this->email,
@@ -67,7 +66,9 @@ class User extends Component
         ];
 
         if ($this->profile_photo) {
-            $userData['profile_photo'] = $this->profile_photo->store('/images/profile-photos', 'public');
+            // change name of profile to full name + timestamp + original extension and remove spaces
+            $profilePhotoName = str_replace(' ', '_', $this->full_name . '_' . time() . '.' . $this->profile_photo->getClientOriginalExtension());
+            $userData['profile_photo'] = $this->profile_photo->storeAs('profiles', $profilePhotoName, 'public');
         }
 
         UserModel::create($userData);
@@ -108,8 +109,6 @@ class User extends Component
     // Method to update user
     public function updateUser()
     {
-        // dd("Update clicked");
-
         $this->validate([
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . UserModel::where('email', $this->email)->value('id'),
@@ -117,29 +116,44 @@ class User extends Component
             'profile_photo' => 'nullable|image|max:1024', // 1MB Max
             'password' => 'nullable|string|min:8|confirmed',
         ]);
-        $user = UserModel::where('email', $this->email)->first();
+        $user = UserModel::where('email', '=', $this->email)->firstOrFail();
         if ($user) {
             $updateData = [
                 'full_name' => $this->full_name,
                 'email' => $this->email,
                 'role' => $this->role,
             ];
-            // check if profile photo is set then update otherwise not 
+
+            // check if profile photo is set then delete previous one and add new otherwise not
             if ($this->profile_photo) {
-                $updateData['profile_photo'] = $this->profile_photo->store('/backend/images/users', 'public');
+                // Delete the old profile photo if it exists
+                if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
+                    Storage::disk('public')->delete($user->profile_photo);
+                }
+                // change name of profile to full name + timestamp + original extension and remove spaces
+                $profilePhotoName = str_replace(' ', '_', $this->full_name) . '_' . time() . '.' . $this->profile_photo->getClientOriginalExtension();
+                $updateData['profile_photo'] = $this->profile_photo->storeAs('profiles', $profilePhotoName, 'public');
             }
+
             // check if password is set then update otherwise not
             if ($this->password) {
                 $updateData['password'] = bcrypt($this->password);
             }
 
-            $user->update($updateData);
+            foreach ($updateData as $key => $value) {
+                $user->$key = $value;
+            }
+            $user->save();
 
             // Reset form fields
             $this->full_name = '';
             $this->email = '';
             $this->role = '';
             $this->profile_photo = null;
+            $this->password = '';
+            $this->password_confirmation = '';
+            
+            $this->show_user_list = true;
             $this->edit_user = false;
 
             // Show success message

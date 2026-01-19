@@ -3,18 +3,7 @@
     @csrf
     <div class="row">
 
-        <div class="position-absolute top-0 start-0 w-100 h-100 z-10" wire:loading.flex>
-            <div class="loading-model d-flex align-items-center justify-content-center w-100 h-100"
-                style="background-color: #3333338c">
-                <div class="data-wrapper">
-                    <div class="spinner-border"
-                        style="width: 8rem; height: 8rem; border-color: #ffffff; border-right-color: transparent;"
-                        role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
 
         <div class="col col-md-5">
             <div class="mb-3">
@@ -98,16 +87,14 @@
                 @enderror
             </div>
 
-
-
-        </div>
-
-        <div class="container">
-            <div class="mb-3 text-end">
+             <div class="mb-3 text-end mt-5">
                 <button type="submit"
-                    class="btn btn-primary py-3 px-5 d-inline-block">{{ $edit_user ? 'Update User' : 'Create User' }}</button>
+                    class="btn btn-sm btn-primary py-2 px-4  d-inline-block">{{ $edit_user ? 'Update User' : 'Create User' }}</button>
             </div>
+
         </div>
+
+        
         
     </div>
 </form>

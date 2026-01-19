@@ -111,8 +111,10 @@ Preloader end
 
                 <li class="nav-item dropdown  header-profile">
                     <a class="nav-link" href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
+                        {{-- check if profile photo exist then show it otherwise show the user icon image on source of below image --}}
+
                         <img
-                            src={{ \Illuminate\Support\Facades\Auth::user()->profile_photo ? "/backend/images/books/" . profile_photo :  "/backend/images/usericon.png" }} width="56"
+                            src={{ auth()->user()->profile_photo ? asset("storage/" . auth()->user()->profile_photo ) :  "storage/default-profile.png" }}
                             alt="Profile pic">
                     </a>
                     <div class="dropdown-menu dropdown-menu-end">

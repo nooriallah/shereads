@@ -17,12 +17,18 @@
                 <th scope="row">{{ $user->id }}</th>
                 <td>
                     @if ($user->profile_photo)
-                        <img src="{{ Storage::url($user->profile_photo) }}" alt="Profile Picture"
-                            class="rounded-circle" width="50">
+                        @if (Storage::disk('public')->exists($user->profile_photo))
+                            <img src='{{ asset("storage/$user->profile_photo") }}' alt="Profile Picture"
+                                class="rounded-circle" width="50">
+                        @else
+                            <img src="{{ asset('storage/default-profile.png') }}" alt="Default Profile Picture"
+                                class="rounded-circle" width="50">
+                        @endif
                     @else
-                        <img src="{{ asset('/storage/default-profile.png') }}" alt="Default Profile Picture"
-                            class="rounded-circle" width="50" >
+                        <img src="{{ asset('storage/default-profile.png') }}" alt="Default Profile Picture"
+                            class="rounded-circle" width="50">
                     @endif
+                </td>
                 <td>{{ $user->full_name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->role }}</td>
