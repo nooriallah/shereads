@@ -38,5 +38,6 @@ Route::group(["middleware" => [
 
     Route::get("/dashboard/categories", \App\Livewire\Backend\Category::class)->name("categories");
     Route::get("/dashboard/users", \App\Livewire\Backend\User::class)->name("users");
+    Route::get("/dashboard/authors", \App\Livewire\Backend\AuthorComp::class)->name("authors");
     
 });

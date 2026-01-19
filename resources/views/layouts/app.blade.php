@@ -31,8 +31,6 @@
 
 <!--*******************
 Preloader start
-<! *******************
-Preloader start
 ********************-->
 <div id="preloader">
     <div class="lds-ripple">
@@ -163,8 +161,8 @@ Preloader end
         </div>
     </div>
     <!--**********************************
-            Header end ti-comment-alt
-        ********************************* -->
+        Header end ti-comment-alt
+    ********************************* -->
 
 
     <!--**********************************
@@ -209,7 +207,7 @@ Preloader end
                     </li>
 
                     <li>
-                        <a href="#" aria-expanded="false">
+                        <a href="{{ route('authors') }}" aria-expanded="false">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -345,10 +343,10 @@ Preloader end
     <div class="content-body bg-white">
 
         <!-- Welcome message  -->
-        @if(\Illuminate\Support\Facades\Auth::user()->role === "subscriber")
+        @if(auth()->user()->role === "subscriber")
 
             <div class="container-fluid bg-white m-0 pt-0 pb-md-3">
-                <h1 class="title-welcome">Welcom {{ \Illuminate\Support\Facades\Auth::user()->name }}!</h1>
+                <h1 class="title-welcome">Welcom {{ auth()->user()->name }}!</h1>
             </div>
 
             <!-- Filters -->
