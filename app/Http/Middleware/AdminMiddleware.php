@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\UserRole;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,9 +17,14 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->role === "admin") {
-            return $next($request);
+        if (! Auth::check()) {
+            return redirect()->route('login');
         }
-        return redirect("/login");
+
+        if (! in_array(Auth::user()->role, UserRole::adminRoles(), true)) {
+            abort(403);
+        }
+
+        return $next($request);
     }
 }

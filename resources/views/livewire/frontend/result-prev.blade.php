@@ -7,7 +7,7 @@
 
         <div class="result_prev row mt-5 pt-5">
             <div class="col-12 gap-4">
-                <h1 class="fw-bolder">GYour personalized books list
+                <h1 class="fw-bolder">Your personalized books list
                     <br>
                     <span class="fw-normal">
                         Based on your answers, we’ve handpicked a selection of books that suit your interests. Ready to dive in and discover your next favorite read?

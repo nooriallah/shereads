@@ -25,4 +25,11 @@
             <div class="loader"></div>
         </div>
 
+        {{-- Short "analyzing" moment, then on to the personalized results preview --}}
+        <script>
+            setTimeout(function () {
+                window.location.href = @json(route('resprev'));
+            }, 3500);
+        </script>
+
     </section>

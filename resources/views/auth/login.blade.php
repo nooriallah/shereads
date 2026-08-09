@@ -18,10 +18,20 @@
                     <h1>Login To Your Account</h1>
                     <p>Sign in to your personalized reading experience.</p>
 
+                    @session('status')
+                        <div class="alert alert-success mt-3" role="alert">{{ $value }}</div>
+                    @endsession
+
                     <form action={{ route('login') }} method="POST" class="d-flex flex-column gap-3 mt-5">
                         @csrf
-                        <input type="email" name="email" placeholder="Email address">
-                        <input type="password" name="password" placeholder="Password">
+                        <input type="email" name="email" placeholder="Email address" value="{{ old('email') }}" required>
+                        @error('email')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                        <input type="password" name="password" placeholder="Password" required>
+                        @error('password')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                         <label for="remember" class="d-flex align-items-center">
                             Remember me
                             <input type="checkbox" name="remember" class="checkbox ps-3">

@@ -2,27 +2,34 @@
 
 namespace App\Livewire\Backend;
 
-use App\Models\CategoryModel;
+use App\Models\Category as CategoryModel;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout("layouts.app")]
 class Category extends Component
 {
+    // The id of the category currently being edited (null when creating).
+    public ?int $categoryId = null;
 
-    #[Validate()]
-    public $name;
-    #[Validate()]
-    public $description;
-
+    public $name = '';
+    public $description = '';
 
     public $edit_category = false;
 
-    public $rules = [
-        'name' => 'required|unique:categories,name',
-        'description' => 'nullable|string',
-    ];
+    protected function rules(): array
+    {
+        return [
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('categories', 'name')->ignore($this->categoryId),
+            ],
+            'description' => ['nullable', 'string'],
+        ];
+    }
 
     public function addCategory()
     {
@@ -33,77 +40,80 @@ class Category extends Component
             'description' => $this->description,
         ]);
 
-        $this->name = '';
-        $this->description = '';
-        if($this->name == '' && $this->description == ''){
-            $edit_category = false;
-        }
+        $this->resetForm();
 
         session()->flash('message', 'Category added successfully.');
     }
 
-
-    
     public function editCategory($id)
     {
         $category = CategoryModel::find($id);
-        if ($category) {
-            $this->name = $category->name;
-            $this->description = $category->description;
-            $this->edit_category = true;
-            $this->dispatch('openEditCategoryModal');
-        } else {
+
+        if (! $category) {
             session()->flash('error', 'Category not found.');
+
+            return;
         }
+
+        $this->categoryId = $category->id;
+        $this->name = $category->name;
+        $this->description = $category->description;
+        $this->edit_category = true;
+        $this->dispatch('openEditCategoryModal');
     }
-
-
 
     public function updateCategory()
     {
-        $this->validate([
-            'name' => 'required|unique:categories,name,' . CategoryModel::where('name', $this->name)->value('id'),
-            'description' => 'nullable|string',
+        $this->validate();
+
+        // Always look the record up by its id — never by name,
+        // because the admin may be renaming the category itself.
+        $category = CategoryModel::find($this->categoryId);
+
+        if (! $category) {
+            session()->flash('error', 'Category not found.');
+
+            return;
+        }
+
+        $category->update([
+            'name' => $this->name,
+            'description' => $this->description,
         ]);
 
-        $category = CategoryModel::where('name', $this->name)->first();
-        if ($category) {
-            $category->update([
-                'name' => $this->name,
-                'description' => $this->description,
-            ]);
+        $this->resetForm();
 
-            // Reset input fields
-            $this->name = '';
-            $this->description = '';
-            $this->edit_category = false;
-
-            session()->flash('message', 'Category updated successfully.');
-        } else {
-            session()->flash('error', 'Category not found.');
-        }
+        session()->flash('message', 'Category updated successfully.');
     }
-
 
     public function deleteCategory($id)
     {
         $category = CategoryModel::find($id);
-        if ($category) {
-            $category->delete();
-            session()->flash('message', 'Category deleted successfully.');
-        } else {
+
+        if (! $category) {
             session()->flash('error', 'Category not found.');
+
+            return;
         }
+
+        $category->delete();
+
+        session()->flash('message', 'Category deleted successfully.');
     }
 
-
-
-
+    protected function resetForm(): void
+    {
+        $this->categoryId = null;
+        $this->name = '';
+        $this->description = '';
+        $this->edit_category = false;
+        $this->resetValidation();
+    }
 
     public function render()
     {
         return view('livewire.backend.category', [
-            'categories' => CategoryModel::all(),
+            'categories' => CategoryModel::orderBy('name')->get(),
         ]);
     }
 }

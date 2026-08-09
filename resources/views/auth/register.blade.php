@@ -23,11 +23,11 @@
 
                     <form action={{ route('register') }} method="POST" class="d-flex flex-column gap-3 mt-5">
                         @csrf
-                        <input type="text" name="full_name" placeholder="Full name" required/>
+                        <input type="text" name="full_name" placeholder="Full name" value="{{ old('full_name') }}" required/>
                         @error('full_name')
                             <span class="text-danger">{{$message }}</span>
                         @enderror
-                        <input type="email" name="email" placeholder="Email address" required/>
+                        <input type="email" name="email" placeholder="Email address" value="{{ old('email') }}" required/>
                         @error("email")
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -39,7 +39,7 @@
                         @error("password_confirmation")
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
-                        <input type="hidden" name="role" value="subscriber">
+                        {{-- Role is never accepted from the form — the server always registers subscribers. --}}
                         <input type="submit" value="Sign Up" />
                         
                     </form>

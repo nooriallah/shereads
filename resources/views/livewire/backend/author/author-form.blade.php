@@ -1,4 +1,4 @@
- <form enctype="multipart/form-data">
+ <form enctype="multipart/form-data" wire:submit.prevent="{{ $edit_author ? 'updateAuthor' : 'saveAuthor' }}">
      @csrf
 
      <div class="mb-3">
@@ -7,6 +7,10 @@
          @if ($author_photo)
              <div class="mb-2">
                  <img src="{{ $author_photo->temporaryUrl() }}" alt="Profile Photo" width="100px" />
+             </div>
+         @elseif ($existing_photo)
+             <div class="mb-2">
+                 <img src="{{ asset('storage/' . $existing_photo) }}" alt="Current photo" width="100px" />
              </div>
          @endif
          <input type="file" accept=".jpg, .jpeg, .png" wire:model="author_photo" class="form-control form-control-lg"
@@ -96,6 +100,7 @@
              placeholder="Enter author bio" wire:model="bio" style="height: 350px;"></textarea>
      </div>
      <div class="d-flex justify-content-end">
-         <input class="btn btn-md btn-success rounded-3" type="submit" value="Add" />
+         <input class="btn btn-md btn-success rounded-3" type="submit"
+             value="{{ $edit_author ? 'Update' : 'Add' }}" />
      </div>
  </form>

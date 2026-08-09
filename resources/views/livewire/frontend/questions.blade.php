@@ -1,16 +1,16 @@
+<section class="container-fluid p-0 question1_wrapper" id="page_wrapper">
 
-    <section class="container-fluid p-0 question1_wrapper" id="page_wrapper">
-
-        <div class="row container p-md-0">
+    @if ($question)
+        <div class="row container p-md-0" wire:key="question-{{ $question->id }}">
 
             <div class="col-md-6 me-md-5">
-                <img src="./frontend/assets//images/f_q_1.png" class="w-100 question_image" alt>
+                <img src="{{ asset($question->image ?: 'frontend/assets/images/f_q_1.png') }}" class="w-100 question_image" alt="Question illustration">
             </div>
 
-            <div class="col-md-5 d-flex ms-md-5  gap-4 flex-column">
+            <div class="col-md-5 d-flex ms-md-5 gap-4 flex-column">
 
-                <div class="arrow mt-3 mt-md-5 mb-md-5 ">
-                    <a href="#" id="btn_arrow" onClick="history.go(-1)">
+                <div class="arrow mt-3 mt-md-5 mb-md-5">
+                    <a href="#" id="btn_arrow" wire:click.prevent="goBack">
                         <svg width="40" height="40" viewBox="0 0 40 40" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -25,52 +25,50 @@
                                 fill="#2D264B" />
                         </svg>
                     </a>
-
                 </div>
 
-                <div class="numbers d-flex  gap-0 align-items-center mb-md-5">
-                    <span class="fill">1</span>
-                    <hr />
-                    <span>2</span>
-                    <hr />
-                    <span>3</span>
-                    <hr />
-                    <span>4</span>
-                    <hr />
-                    <span>5</span>
-                    <hr />
-                    <span>6</span>
+                <div class="numbers d-flex gap-0 align-items-center mb-md-5">
+                    @for ($i = 0; $i < $total; $i++)
+                        <span @class(['fill' => $i <= $current])>{{ $i + 1 }}</span>
+                        @if ($i < $total - 1)
+                            <hr />
+                        @endif
+                    @endfor
                 </div>
 
                 <div class="question">
-                    <h4 class="fw-bold">What is your primary goal for
-                        reading?</h4>
+                    <h4 class="fw-bold">{{ $question->question_text }}</h4>
                 </div>
 
                 <div class="answers">
 
-                    <form action="#" class="form d-flex flex-column align-items-start gap-3">
+                    <div class="form d-flex flex-column align-items-start gap-3" wire:loading.class="pe-none opacity-50">
 
-                        <input type="radio" class="btn-check" name="answer" id="answer1" autocomplete="off">
-                        <label class="btn btn-outline-success" for="answer1">Relaxation</label>
+                        @foreach ($question->options as $option)
+                            <input type="radio" class="btn-check" name="answer" id="answer{{ $option->id }}"
+                                autocomplete="off"
+                                @checked(($answers[$question->id] ?? null) === $option->id)>
+                            <label class="btn btn-outline-success" for="answer{{ $option->id }}"
+                                wire:click="selectAnswer({{ $option->id }})">
+                                {{ $option->option_text }}
+                            </label>
+                        @endforeach
 
-                        <input type="radio" class="btn-check" name="answer" id="answer2" autocomplete="off">
-                        <label class="btn btn-outline-success" for="answer2">Motivation</label>
-
-                        <input type="radio" class="btn-check" name="answer" id="answer3" autocomplete="off">
-                        <label class="btn btn-outline-success" for="answer3">Learning</label>
-
-                        <input type="radio" class="btn-check" name="answer" id="answer4" autocomplete="off">
-                        <label class="btn btn-outline-success" for="answer4">Entertainment</label>
-
-                    </form>
+                    </div>
 
                 </div>
-
-
 
             </div>
 
         </div>
+    @else
+        <div class="row container p-md-0">
+            <div class="col-12 text-center py-5">
+                <h4 class="fw-bold">The questionnaire is not available right now.</h4>
+                <p>Please check back soon.</p>
+                <a href="{{ route('start') }}" class="btn btn-success primary-bg fw-bold">Back to home</a>
+            </div>
+        </div>
+    @endif
 
-    </section>
+</section>

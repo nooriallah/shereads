@@ -72,14 +72,14 @@
             </div>
 
             <div class="mb-3">
-                <label for="role">User Rule</label>
+                <label for="role">User Role</label>
                 <select name="role" id="role" @class([
                     'form-control form-control-lg',
                     'border-danger' => $errors->has('role'),
                 ]) wire:model="role">
                     <option value="">Select Role</option>
-                    @foreach (\App\Enums\UserRules::cases() as $role)
-                        <option value="{{ $role->value }}">{{ ucfirst($role->value) }}</option>
+                    @foreach (\App\Enums\UserRole::cases() as $role)
+                        <option value="{{ $role->value }}">{{ $role->label() }}</option>
                     @endforeach
                 </select>
                 @error('role')

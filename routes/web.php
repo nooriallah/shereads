@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Frontend\AllDone;
 use App\Livewire\Frontend\Analyzing;
 use App\Livewire\Frontend\Questions;
 use App\Livewire\Frontend\ResultPrev;
@@ -12,7 +13,8 @@ use Illuminate\Support\Facades\Route;
 // Front routes
 Route::get("/", Start::class)->name("start");
 Route::get("/startnow", StartNow::class)->name("startnow");
-Route::get("/question1", Questions::class)->name("question");
+Route::get("/questions", Questions::class)->name("question");
+Route::get("/all-done", AllDone::class)->name("alldone");
 Route::get("/analyze", Analyzing::class)->name("analyze");
 Route::get("/result-prev", ResultPrev::class)->name("resprev");
 Route::get("/sign-up", Signup::class)->name("signup");
@@ -36,7 +38,9 @@ Route::group(["middleware" => [
 ]], function () {
     
 
+    Route::get("/dashboard/books", \App\Livewire\Backend\Books::class)->name("books");
     Route::get("/dashboard/categories", \App\Livewire\Backend\Category::class)->name("categories");
+    Route::get("/dashboard/interests", \App\Livewire\Backend\Interests::class)->name("interests");
     Route::get("/dashboard/users", \App\Livewire\Backend\User::class)->name("users");
     Route::get("/dashboard/authors", \App\Livewire\Backend\AuthorComp::class)->name("authors");
     

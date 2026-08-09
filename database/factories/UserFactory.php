@@ -27,7 +27,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'full_name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
@@ -36,7 +36,7 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'profile_photo' => null,
             'current_team_id' => null,
-            'role' =>  fake()->text(),
+            'role' => \App\Enums\UserRole::SUBSCRIBER->value,
         ];
     }
 
