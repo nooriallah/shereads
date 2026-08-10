@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -19,6 +20,8 @@ class Books extends Component
 {
     use WithFileUploads;
     use WithPagination;
+
+    protected string $paginationTheme = 'bootstrap';
 
     public const LANGUAGES = [
         'en' => 'English',
@@ -44,6 +47,8 @@ class Books extends Component
 
     public $edit_book = false;
     public $show_book_list = true;
+
+    #[Url]
     public $search = '';
 
     protected function rules(): array

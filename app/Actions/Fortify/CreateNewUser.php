@@ -3,6 +3,7 @@
 namespace App\Actions\Fortify;
 
 use App\Enums\UserRole;
+use App\Models\QuestionnaireResponse;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -29,11 +30,35 @@ class CreateNewUser implements CreatesNewUsers
 
         // Self-registered users are always subscribers.
         // Never accept a role from public registration input.
-        return User::create([
+        $user = User::create([
             'full_name' => $input['full_name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
             'role' => UserRole::SUBSCRIBER->value,
         ]);
+
+        $this->attachQuestionnaireResponse($user);
+
+        return $user;
+    }
+
+    /**
+     * If this visitor answered the questionnaire before signing up,
+     * attach that anonymous response to the new account so her answers
+     * (and future recommendations) follow her.
+     */
+    protected function attachQuestionnaireResponse(User $user): void
+    {
+        $token = session('questionnaire_token');
+
+        if (! $token) {
+            return;
+        }
+
+        QuestionnaireResponse::where('session_token', $token)
+            ->whereNull('user_id')
+            ->latest()
+            ->first()
+            ?->update(['user_id' => $user->id]);
     }
 }

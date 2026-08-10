@@ -8,13 +8,18 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 #[Layout("layouts.app")]
 class User extends Component
 {
     use WithFileUploads;
+    use WithPagination;
+
+    protected string $paginationTheme = 'bootstrap';
 
     // The id of the user currently being edited (null when creating).
     public ?int $userId = null;
@@ -28,6 +33,12 @@ class User extends Component
 
     public $edit_user = false;
     public $show_user_list = true;
+
+    /** List controls: 'all' | 'readers' | 'staff' */
+    public string $roleFilter = 'all';
+
+    #[Url]
+    public string $search = '';
 
     /**
      * Validation rules. Defined as a method so the unique rule
@@ -46,6 +57,17 @@ class User extends Component
             'role' => ['required', 'string', Rule::in(UserRole::values())],
             'profile_photo' => ['nullable', 'image', 'max:1024'], // 1MB max
         ];
+    }
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function setRoleFilter(string $filter)
+    {
+        $this->roleFilter = in_array($filter, ['all', 'readers', 'staff'], true) ? $filter : 'all';
+        $this->resetPage();
     }
 
     public function showUserForm()
@@ -185,8 +207,34 @@ class User extends Component
 
     public function render()
     {
+        $subscriberRole = UserRole::SUBSCRIBER->value;
+
+        // Tab counts (one grouped query).
+        $byRole = UserModel::query()
+            ->selectRaw('role, COUNT(*) as total')
+            ->groupBy('role')
+            ->pluck('total', 'role');
+
+        $totalAll = (int) $byRole->sum();
+        $totalReaders = (int) ($byRole[$subscriberRole] ?? 0);
+
+        $users = UserModel::query()
+            ->when($this->roleFilter === 'readers', fn ($q) => $q->where('role', $subscriberRole))
+            ->when($this->roleFilter === 'staff', fn ($q) => $q->where('role', '!=', $subscriberRole))
+            ->when($this->search, fn ($q) => $q->where(fn ($qq) => $qq
+                ->where('full_name', 'like', '%' . $this->search . '%')
+                ->orWhere('email', 'like', '%' . $this->search . '%')))
+            ->withExists([
+                'questionnaireResponses as completed_questionnaire' => fn ($q) => $q->whereNotNull('completed_at'),
+            ])
+            ->latest()
+            ->paginate(10);
+
         return view('livewire.backend.user', [
-            'users' => UserModel::latest()->get(),
+            'users' => $users,
+            'totalAll' => $totalAll,
+            'totalReaders' => $totalReaders,
+            'totalStaff' => $totalAll - $totalReaders,
         ]);
     }
 }

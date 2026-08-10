@@ -34,7 +34,7 @@
                         @enderror
                         <label for="remember" class="d-flex align-items-center">
                             Remember me
-                            <input type="checkbox" name="remember" class="checkbox ps-3">
+                            <input type="checkbox" name="remember" class="checkbox ps-3 ms-1">
                         </label>
                         <input type="submit" value="Login">
                     </form>

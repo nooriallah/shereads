@@ -87,23 +87,7 @@ Preloader end
 
                 <li class="nav-item d-flex w-100">
 
-                    <form class="input-group search-area w-100" action="" method="" style="height: 47px;">
-									<span class="input-group-text h-100">
-										<a href="javascript:void(0)">
-											<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                 xmlns="http://www.w3.org/2000/svg">
-												<path fill-rule="evenodd" clip-rule="evenodd"
-                                                      d="M11 0.25C5.61522 0.25 1.25 4.61522 1.25 10C1.25 15.3848 5.61522 19.75 11 19.75C16.3848 19.75 20.75 15.3848 20.75 10C20.75 4.61522 16.3848 0.25 11 0.25ZM2.75 10C2.75 5.44365 6.44365 1.75 11 1.75C15.5563 1.75 19.25 5.44365 19.25 10C19.25 14.5563 15.5563 18.25 11 18.25C6.44365 18.25 2.75 14.5563 2.75 10Z"
-                                                      fill="#C8C8C8"/>
-												<path
-                                                    d="M19.5304 17.4698C19.2375 17.1769 18.7626 17.1769 18.4697 17.4698C18.1768 17.7626 18.1768 18.2375 18.4697 18.5304L22.4696 22.5304C22.7625 22.8233 23.2374 22.8233 23.5303 22.5304C23.8232 22.2375 23.8232 21.7626 23.5303 21.4697L19.5304 17.4698Z"
-                                                    fill="#C8C8C8"/>
-											</svg>
-										</a>
-									</span>
-                        <input type="text" class="form-control h-100"
-                               placeholder="Search for books, genres, or authors...">
-                    </form>
+                    <livewire:global-search />
 
                 </li>
 
@@ -111,12 +95,10 @@ Preloader end
                     <a class="nav-link" href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
                         {{-- check if profile photo exist then show it otherwise show the user icon image on source of below image --}}
 
-                        <img
-                            src={{ auth()->user()->profile_photo ? asset("storage/" . auth()->user()->profile_photo ) :  "storage/default-profile.png" }}
-                            alt="Profile pic">
+                        <img src="{{ auth()->user()->profile_photo_url }}" alt="Profile pic">
                     </a>
                     <div class="dropdown-menu dropdown-menu-end">
-                        <a href="app-profile.html" class="dropdown-item ai-icon">
+                        <a href="{{ route('profile.show') }}" class="dropdown-item ai-icon">
                             <svg id="icon-user1" xmlns="http://www.w3.org/2000/svg" class="text-primary" width="18"
                                  height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                  stroke-linecap="round" stroke-linejoin="round">
@@ -125,32 +107,19 @@ Preloader end
                             </svg>
                             <span class="ms-2">Profile </span>
                         </a>
-                        <a href="email-inbox.html" class="dropdown-item ai-icon">
-                            <svg id="icon-inbox" xmlns="http://www.w3.org/2000/svg" class="text-success" width="18"
-                                 height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                 stroke-linecap="round" stroke-linejoin="round">
-                                <path
-                                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                                <polyline points="22,6 12,13 2,6"></polyline>
-                            </svg>
-                            <span class="ms-2">Inbox </span>
-                        </a>
-                        <a href="javascript:void(0)" class="dropdown-item ai-icon">
-                            <svg id="icon-logout" xmlns="http://www.w3.org/2000/svg" class="text-danger" width="18"
-                                 height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                 stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                                <polyline points="16 17 21 12 16 7"></polyline>
-                                <line x1="21" y1="12" x2="9" y2="12"></line>
-                            </svg>
-                            <span class="ms-2">Logout </span>
-                        </a>
                         <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}" x-data>
+                        <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <x-dropdown-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
+                            <button type="submit" class="dropdown-item ai-icon">
+                                <svg id="icon-logout" xmlns="http://www.w3.org/2000/svg" class="text-danger" width="18"
+                                     height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                <span class="ms-2">Logout </span>
+                            </button>
                         </form>
                     </div>
                 </li>
@@ -391,7 +360,6 @@ Preloader end
 </body>
 <!-- Required vendors -->
 <script src="/backend/vendor/global/global.min.js"></script>
-<script src="/backend/vendor/chart.js/Chart.bundle.min.js"></script>
 <script src="/backend/vendor/jquery-nice-select/js/jquery.nice-select.min.js"></script>
 
 <script src="/backend/js/custom.min.js"></script>
