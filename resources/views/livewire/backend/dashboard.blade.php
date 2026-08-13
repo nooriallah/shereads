@@ -185,7 +185,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title">Latest Books</h4>
-                        <a href="{{ route('books') }}" class="btn btn-sm" style="background:#05653D;color:#fff;">Manage books</a>
+                        <a href="{{ route('books') }}" wire:navigate class="btn btn-sm" style="background:#05653D;color:#fff;">Manage books</a>
                     </div>
                     <div class="card-body">
                         @if ($latestBooks->isEmpty())
@@ -228,7 +228,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title">Newest Users</h4>
-                        <a href="{{ route('users') }}" class="btn btn-sm" style="background:#05653D;color:#fff;">Manage users</a>
+                        <a href="{{ route('users') }}" wire:navigate class="btn btn-sm" style="background:#05653D;color:#fff;">Manage users</a>
                     </div>
                     <div class="card-body">
                         @if ($newestUsers->isEmpty())

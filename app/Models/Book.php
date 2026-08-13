@@ -23,6 +23,8 @@ class Book extends Model
         self::STATUS_ARCHIVED,
     ];
 
+    public const CONTENT_TYPE_PDF = 'pdf';
+
     protected $fillable = [
         'title',
         'slug',
@@ -31,10 +33,18 @@ class Book extends Model
         'language',
         'publication_year',
         'pages',
+        'content_file',
+        'content_type',
         'status',
         'created_by',
         'updated_by',
     ];
+
+    /** Does this book have readable content uploaded? */
+    public function hasContent(): bool
+    {
+        return ! empty($this->content_file);
+    }
 
     public function authors(): BelongsToMany
     {

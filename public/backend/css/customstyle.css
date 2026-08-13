@@ -1,4 +1,24 @@
-@import url('./style.css');
+/* style.css is linked by the layout — do NOT @import it here (it loaded the 1MB theme twice) */
+
+/* The theme hides #main-wrapper (opacity:0) and reveals it with a .show class
+   added on window.load — an event that never re-fires during wire:navigate,
+   which left a white screen after SPA navigation. Always show the wrapper. */
+#main-wrapper {
+    opacity: 1 !important;
+}
+
+/* Sidebar active menu item: the theme paints the active link text with
+   var(--primary) — the same dark green as the sidebar background — and its
+   pale background rule is scoped to a sidebar mode we don't use, so the
+   active item was invisible. Match the hover style instead. */
+.dlabnav .metismenu > li.mm-active > a {
+    background-color: var(--primary-100, #E6F0EC) !important;
+    color: var(--primary, #05653D) !important;
+    font-weight: 600;
+}
+.dlabnav .metismenu > li.mm-active > a svg path {
+    fill: var(--primary, #05653D) !important;
+}
 /*#preloader {*/
 /*    display: none !important;*/
 /*}*/
@@ -158,6 +178,44 @@
 .btn-outline-primary:hover { background-color: var(--sr-primary-500) !important; color: var(--sr-white) !important; }
 .badge-primary { background-color: var(--sr-primary-500) !important; color: var(--sr-white) !important; }
 .badge-primary.light { background-color: var(--sr-primary-100) !important; color: var(--sr-primary-700) !important; }
+
+/* ---------- Checkboxes & radios: fix theme misalignment ----------
+   The theme enlarges .form-check-input to 1.25rem and offsets the
+   label separately, so checkbox and label sit on different lines.
+   Flex-align them instead (switches excluded — they have their own layout). */
+.form-check:not(.form-switch):not(.toggle-switch) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-left: 0;
+    margin-bottom: 0.375rem;
+    min-height: auto;
+}
+.form-check:not(.form-switch):not(.toggle-switch) .form-check-input {
+    float: none;
+    margin: 0;
+    flex-shrink: 0;
+    position: static;
+}
+.form-check:not(.form-switch):not(.toggle-switch) .form-check-label {
+    margin: 0;
+    cursor: pointer;
+    line-height: 1.3;
+}
+.form-check-inline {
+    display: inline-flex !important;
+    margin-right: 1rem;
+}
+
+/* Brand the check state (theme default is off-palette) */
+.form-check-input:checked {
+    background-color: var(--sr-primary-500) !important;
+    border-color: var(--sr-primary-500) !important;
+}
+.form-check-input:focus {
+    border-color: var(--sr-secondary-400);
+    box-shadow: 0 0 0 0.2rem rgba(231, 185, 68, 0.25);
+}
 
 /* Secondary / neutral → gray scale */
 .badge-secondary { background-color: var(--sr-gray-400) !important; color: var(--sr-white) !important; }

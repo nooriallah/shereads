@@ -29,18 +29,9 @@
 
 <body>
 
-<!--*******************
-Preloader start
-********************-->
-<div id="preloader">
-    <div class="lds-ripple">
-        <div></div>
-        <div></div>
-    </div>
-</div>
-<!--*******************
-Preloader end
-********************-->
+{{-- Preloader removed: with wire:navigate it never gets dismissed
+     (the theme hides it on window.load, which doesn't re-fire on
+     SPA navigation) and Livewire pages don't need it anyway. --}}
 
 
 <!-- Page Content -->
@@ -98,7 +89,7 @@ Preloader end
                         <img src="{{ auth()->user()->profile_photo_url }}" alt="Profile pic">
                     </a>
                     <div class="dropdown-menu dropdown-menu-end">
-                        <a href="{{ route('profile.show') }}" class="dropdown-item ai-icon">
+                        <a href="{{ route('profile.show') }}" wire:navigate class="dropdown-item ai-icon">
                             <svg id="icon-user1" xmlns="http://www.w3.org/2000/svg" class="text-primary" width="18"
                                  height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                  stroke-linecap="round" stroke-linejoin="round">
@@ -143,7 +134,7 @@ Preloader end
                 {{-- For admins --}}
                 <ul class="metismenu" id="menu">
                     <li>
-                        <a href={{ route("dashboard") }} aria-expanded="false">
+                        <a href="{{ route('dashboard') }}" wire:navigate aria-expanded="false">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -164,7 +155,7 @@ Preloader end
                     </li>
                     
                     <li>
-                        <a href="{{ route('books') }}" aria-expanded="false">
+                        <a href="{{ route('books') }}" wire:navigate aria-expanded="false">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -176,7 +167,7 @@ Preloader end
                     </li>
 
                     <li>
-                        <a href="{{ route('authors') }}" aria-expanded="false">
+                        <a href="{{ route('authors') }}" wire:navigate aria-expanded="false">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -188,7 +179,7 @@ Preloader end
                     </li>
 
                     <li>
-                        <a href="{{ route("categories") }}" aria-expanded="false">
+                        <a href="{{ route('categories') }}" wire:navigate aria-expanded="false">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -199,7 +190,7 @@ Preloader end
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('interests') }}" aria-expanded="false">
+                        <a href="{{ route('interests') }}" wire:navigate aria-expanded="false">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -210,7 +201,7 @@ Preloader end
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('users') }}" aria-expanded="false">
+                        <a href="{{ route('users') }}" wire:navigate aria-expanded="false">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -228,7 +219,7 @@ Preloader end
                 {{-- For Subscribers --}}
                 <ul class="metismenu" id="menu">
                     <li>
-                        <a href={{ route("dashboard") }} aria-expanded="false">
+                        <a href="{{ route('dashboard') }}" wire:navigate aria-expanded="false">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -357,13 +348,12 @@ Preloader end
 </div>
 
 
-</body>
 <!-- Required vendors -->
-<script src="/backend/vendor/global/global.min.js"></script>
-<script src="/backend/vendor/jquery-nice-select/js/jquery.nice-select.min.js"></script>
+<script src="/backend/vendor/global/global.min.js" data-navigate-once></script>
+<script src="/backend/vendor/jquery-nice-select/js/jquery.nice-select.min.js" data-navigate-once></script>
 
 <script src="/backend/js/custom.min.js"></script>
 <script src="/backend/js/dlabnav-init.js"></script>
 
-
+</body>
 </html>

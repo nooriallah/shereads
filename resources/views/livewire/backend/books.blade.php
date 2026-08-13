@@ -7,7 +7,7 @@
     @endif
 
     {{-- Loading overlay --}}
-    <div class="position-absolute top-0 start-0 w-100 h-100 z-10 rounded-2" wire:loading.flex wire:target="cover_image, createBook, updateBook">
+    <div class="position-absolute top-0 start-0 w-100 h-100 rounded-2" style="z-index: 1040;" wire:loading.flex wire:target="cover_image, createBook, updateBook">
         <div class="loading-model d-flex align-items-center justify-content-center w-100 h-100"
             style="background-color: #3333338c">
             <div class="spinner-border" style="width: 8rem; height: 8rem; border-color: #ffffff; border-right-color: transparent;" role="status">
@@ -100,6 +100,51 @@
                                 <input type="file" accept=".jpg, .jpeg, .png" id="cover_image"
                                     class="form-control form-control-lg" wire:model="cover_image" />
                                 @error('cover_image') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="mb-3" x-data="{ uploading: false, progress: 0 }"
+                                x-on:livewire-upload-start="uploading = true"
+                                x-on:livewire-upload-finish="uploading = false; progress = 0"
+                                x-on:livewire-upload-cancel="uploading = false; progress = 0"
+                                x-on:livewire-upload-error="uploading = false"
+                                x-on:livewire-upload-progress="progress = $event.detail.progress">
+
+                                <label for="content_file">
+                                    Book PDF
+                                    <small class="text-muted">(required to publish — max 100MB)</small>
+                                </label>
+
+                                @if ($existing_content && ! $content_file)
+                                    <div class="mb-2 d-flex align-items-center gap-2">
+                                        <span class="badge badge-success">PDF uploaded</span>
+                                        <a href="{{ route('book.content', $bookId) }}" target="_blank"
+                                            class="btn btn-sm btn-outline-primary">
+                                            View current PDF
+                                        </a>
+                                        <small class="text-muted">Choosing a new file will replace it.</small>
+                                    </div>
+                                @endif
+
+                                @if ($content_file)
+                                    <div class="mb-2">
+                                        <span class="badge badge-success">New PDF selected — will be saved with the book</span>
+                                    </div>
+                                @endif
+
+                                <input type="file" accept="application/pdf,.pdf" id="content_file"
+                                    class="form-control form-control-lg" wire:model="content_file" />
+
+                                {{-- Upload progress --}}
+                                <div class="progress mt-2" style="height: 8px;" x-show="uploading" x-cloak>
+                                    <div class="progress-bar" role="progressbar"
+                                        style="background: var(--sr-primary-500, #05653D);"
+                                        x-bind:style="'width: ' + progress + '%; background: var(--sr-primary-500, #05653D);'"></div>
+                                </div>
+                                <small class="text-muted" x-show="uploading" x-cloak>
+                                    Uploading… <span x-text="progress"></span>%
+                                </small>
+
+                                @error('content_file') <span class="text-danger d-block">{{ $message }}</span> @enderror
                             </div>
 
                         </div>
@@ -199,6 +244,7 @@
                                     <th scope="col">Title</th>
                                     <th scope="col">Authors</th>
                                     <th scope="col">Categories</th>
+                                    <th scope="col">PDF</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Actions</th>
                                 </tr>
@@ -217,6 +263,18 @@
                                         <td>{{ $book->title }}</td>
                                         <td>{{ $book->authors->pluck('full_name')->join(', ') ?: '—' }}</td>
                                         <td>{{ $book->categories->pluck('name')->join(', ') ?: '—' }}</td>
+                                        <td>
+                                            @if ($book->hasContent())
+                                                <a href="{{ route('book.content', $book->id) }}" target="_blank"
+                                                    title="View PDF" class="badge badge-success text-decoration-none">
+                                                    <i class="fa fa-file-pdf"></i> View
+                                                </a>
+                                            @else
+                                                <span class="badge badge-secondary" title="No PDF uploaded — cannot be published">
+                                                    Missing
+                                                </span>
+                                            @endif
+                                        </td>
                                         <td>
                                             <span @class([
                                                 'badge',

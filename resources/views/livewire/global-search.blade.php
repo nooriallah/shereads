@@ -33,7 +33,7 @@
                     <div class="px-3 pt-3 pb-1 fs-12 text-uppercase font-w600 text-accent">Books</div>
                     @foreach ($results['books'] as $book)
                         @if ($isAdmin)
-                            <a href="{{ route('books', ['search' => $book->title]) }}"
+                            <a href="{{ route('books', ['search' => $book->title]) }}" wire:navigate
                                 class="search-result-item dropdown-item d-flex justify-content-between align-items-center py-2">
                                 <span>
                                     <span class="d-block font-w600">{{ $book->title }}</span>
@@ -60,7 +60,7 @@
                     <div class="px-3 pt-3 pb-1 fs-12 text-uppercase font-w600 text-accent">Authors</div>
                     @foreach ($results['authors'] as $author)
                         @if ($isAdmin)
-                            <a href="{{ route('authors') }}" class="search-result-item dropdown-item py-2">
+                            <a href="{{ route('authors') }}" wire:navigate class="search-result-item dropdown-item py-2">
                                 <span class="d-block font-w600">{{ $author->full_name }}</span>
                                 @if ($author->country)
                                     <small class="text-muted">{{ $author->country }}</small>
@@ -79,7 +79,7 @@
                     <div class="px-3 pt-3 pb-1 fs-12 text-uppercase font-w600 text-accent">Categories</div>
                     @foreach ($results['categories'] as $category)
                         @if ($isAdmin)
-                            <a href="{{ route('categories') }}" class="search-result-item dropdown-item py-2 font-w600">
+                            <a href="{{ route('categories') }}" wire:navigate class="search-result-item dropdown-item py-2 font-w600">
                                 {{ $category->name }}
                             </a>
                         @else
@@ -93,7 +93,7 @@
                     @if ($results->get('interests', collect())->isNotEmpty())
                         <div class="px-3 pt-3 pb-1 fs-12 text-uppercase font-w600 text-accent">Interests</div>
                         @foreach ($results['interests'] as $interest)
-                            <a href="{{ route('interests') }}" class="search-result-item dropdown-item py-2 font-w600">
+                            <a href="{{ route('interests') }}" wire:navigate class="search-result-item dropdown-item py-2 font-w600">
                                 {{ $interest->name }}
                             </a>
                         @endforeach
@@ -103,7 +103,7 @@
                     @if ($results->get('users', collect())->isNotEmpty())
                         <div class="px-3 pt-3 pb-1 fs-12 text-uppercase font-w600 text-accent">Users</div>
                         @foreach ($results['users'] as $user)
-                            <a href="{{ route('users', ['search' => $user->email]) }}"
+                            <a href="{{ route('users', ['search' => $user->email]) }}" wire:navigate
                                 class="search-result-item dropdown-item d-flex justify-content-between align-items-center py-2">
                                 <span>
                                     <span class="d-block font-w600">{{ $user->full_name }}</span>

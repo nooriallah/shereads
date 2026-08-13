@@ -41,6 +41,9 @@ class Books extends Component
     public $cover_image;          // new upload
     public $existing_cover = null; // path already stored on the book
 
+    public $content_file;            // new PDF upload
+    public $existing_content = null; // path already stored on the book
+
     public array $author_ids = [];
     public array $category_ids = [];
     public array $interest_ids = [];
@@ -61,6 +64,7 @@ class Books extends Component
             'pages' => ['nullable', 'integer', 'min:1', 'max:65000'],
             'status' => ['required', Rule::in(Book::STATUSES)],
             'cover_image' => ['nullable', 'image', 'max:2048'], // 2MB max
+            'content_file' => ['nullable', 'file', 'mimes:pdf', 'max:102400'], // 100MB max
             'author_ids' => ['array'],
             'author_ids.*' => ['integer', 'exists:authors,id'],
             'category_ids' => ['array'],
@@ -86,6 +90,13 @@ class Books extends Component
     {
         $data = $this->validate();
 
+        // Business rule: a book cannot be published without its PDF.
+        if ($this->status === Book::STATUS_PUBLISHED && ! $this->content_file) {
+            $this->addError('content_file', 'A PDF file is required before a book can be published. Save it as draft, or upload the PDF.');
+
+            return;
+        }
+
         $book = Book::create([
             'title' => $this->title,
             'slug' => Book::uniqueSlug($this->title),
@@ -95,6 +106,8 @@ class Books extends Component
             'pages' => $this->pages ?: null,
             'status' => $this->status,
             'cover_image' => $this->cover_image ? $this->storeCover() : null,
+            'content_file' => $this->content_file ? $this->storeContent() : null,
+            'content_type' => Book::CONTENT_TYPE_PDF,
             'created_by' => Auth::id(),
             'updated_by' => Auth::id(),
         ]);
@@ -126,6 +139,8 @@ class Books extends Component
         $this->status = $book->status;
         $this->existing_cover = $book->cover_image;
         $this->cover_image = null;
+        $this->existing_content = $book->content_file;
+        $this->content_file = null;
 
         $this->author_ids = $book->authors->pluck('id')->map(fn ($v) => (int) $v)->all();
         $this->category_ids = $book->categories->pluck('id')->map(fn ($v) => (int) $v)->all();
@@ -143,6 +158,13 @@ class Books extends Component
 
         if (! $book) {
             session()->flash('error', 'Book not found.');
+
+            return;
+        }
+
+        // Business rule: a book cannot be published without its PDF.
+        if ($this->status === Book::STATUS_PUBLISHED && ! $this->content_file && ! $book->content_file) {
+            $this->addError('content_file', 'A PDF file is required before a book can be published. Save it as draft, or upload the PDF.');
 
             return;
         }
@@ -167,6 +189,14 @@ class Books extends Component
             $book->cover_image = $this->storeCover();
         }
 
+        if ($this->content_file) {
+            if ($book->content_file && Storage::disk('local')->exists($book->content_file)) {
+                Storage::disk('local')->delete($book->content_file);
+            }
+            $book->content_file = $this->storeContent();
+            $book->content_type = Book::CONTENT_TYPE_PDF;
+        }
+
         $book->save();
 
         $this->syncRelations($book);
@@ -185,6 +215,13 @@ class Books extends Component
 
         if (! $book) {
             session()->flash('error', 'Book not found.');
+
+            return;
+        }
+
+        // Business rule: cannot publish a book that has no PDF.
+        if ($book->status !== Book::STATUS_PUBLISHED && ! $book->content_file) {
+            session()->flash('error', 'This book has no PDF yet — upload one before publishing.');
 
             return;
         }
@@ -232,6 +269,17 @@ class Books extends Component
         return $this->cover_image->storeAs('covers', $name, 'public');
     }
 
+    /**
+     * Book PDFs go on the PRIVATE disk (storage/app/private/books) so they
+     * are only reachable through the authenticated book.content route.
+     */
+    protected function storeContent(): string
+    {
+        $name = 'book_' . time() . '_' . uniqid() . '.pdf';
+
+        return $this->content_file->storeAs('books', $name, 'local');
+    }
+
     protected function resetForm(): void
     {
         $this->bookId = null;
@@ -243,6 +291,8 @@ class Books extends Component
         $this->status = Book::STATUS_DRAFT;
         $this->cover_image = null;
         $this->existing_cover = null;
+        $this->content_file = null;
+        $this->existing_content = null;
         $this->author_ids = [];
         $this->category_ids = [];
         $this->interest_ids = [];

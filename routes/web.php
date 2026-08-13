@@ -27,6 +27,9 @@ Route::group(["middleware" => [
     "verified"
 ]], function () {
     Route::get("/dashboard", \App\Livewire\Backend\Dashboard::class)->name("dashboard");
+
+    // Book PDF stream — admins: any book; readers: published books only.
+    Route::get("/books/{book}/content", \App\Http\Controllers\BookContentController::class)->name("book.content");
 });
 
 //Admin dashboard

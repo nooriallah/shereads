@@ -7,7 +7,7 @@
     @endif
 
     {{-- Loading overlay --}}
-    <div class="position-absolute top-0 start-0 w-100 h-100 z-10 rounded-2" wire:loading.flex>
+    <div class="position-absolute top-0 start-0 w-100 h-100 rounded-2" style="z-index: 1040;" wire:loading.flex wire:target="profile_photo, createUser, updateUser, deleteUser">
         <div class="loading-model d-flex align-items-center justify-content-center w-100 h-100"
             style="background-color: #3333338c">
             <div class="data-wrapper">
@@ -28,11 +28,11 @@
         </button>
     </div>
 
-    <div class="mt-4" x-show={{ $show_user_list ? 'hidden' : 'open' }}>
+    <div class="mt-4" @if ($show_user_list) style="display: none" @endif>
         @include('livewire.backend.user.user-form')
     </div>
 
-    <div class="mt-4" x-show={{ $show_user_list ? 'open' : 'hidden' }}>
+    <div class="mt-4" @unless ($show_user_list) style="display: none" @endunless>
 
         {{-- Role tabs + search --}}
         <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
