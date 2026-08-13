@@ -30,6 +30,9 @@ Route::group(["middleware" => [
 
     // Book PDF stream — admins: any book; readers: published books only.
     Route::get("/books/{book}/content", \App\Http\Controllers\BookContentController::class)->name("book.content");
+
+    // Reading Room — same access rules, enforced in the component.
+    Route::get("/read/{book}", \App\Livewire\Backend\ReadingRoom::class)->name("read");
 });
 
 //Admin dashboard
@@ -44,7 +47,8 @@ Route::group(["middleware" => [
     Route::get("/dashboard/books", \App\Livewire\Backend\Books::class)->name("books");
     Route::get("/dashboard/categories", \App\Livewire\Backend\Category::class)->name("categories");
     Route::get("/dashboard/interests", \App\Livewire\Backend\Interests::class)->name("interests");
+    Route::get("/dashboard/questions", \App\Livewire\Backend\Questions::class)->name("questions.manage");
     Route::get("/dashboard/users", \App\Livewire\Backend\User::class)->name("users");
     Route::get("/dashboard/authors", \App\Livewire\Backend\AuthorComp::class)->name("authors");
     
-});
+}); 

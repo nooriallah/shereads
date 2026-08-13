@@ -79,6 +79,24 @@ class User extends Authenticatable
         return $this->hasMany(QuestionnaireResponse::class);
     }
 
+    /** Books this reader hearted. */
+    public function favoriteBooks()
+    {
+        return $this->belongsToMany(Book::class, 'favorites')->withTimestamps();
+    }
+
+    /** Books this reader saved for later. */
+    public function savedBooks()
+    {
+        return $this->belongsToMany(Book::class, 'saved_books')->withTimestamps();
+    }
+
+    /** One row per book the reader has opened in the Reading Room. */
+    public function readingProgress(): HasMany
+    {
+        return $this->hasMany(ReadingProgress::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Profile photo
