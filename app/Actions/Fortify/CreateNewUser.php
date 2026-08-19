@@ -5,8 +5,10 @@ namespace App\Actions\Fortify;
 use App\Enums\UserRole;
 use App\Models\QuestionnaireResponse;
 use App\Models\User;
+use App\Providers\FortifyServiceProvider;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
 
@@ -21,6 +23,14 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
+        // The questionnaire always comes before signup (core SHEREADS flow).
+        // This also guards direct POSTs that skip the register page redirect.
+        if (! FortifyServiceProvider::questionnaireCompleted()) {
+            throw ValidationException::withMessages([
+                'email' => __('Please answer our short questionnaire first — signup comes right after it.'),
+            ]);
+        }
+
         Validator::make($input, [
             'full_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],

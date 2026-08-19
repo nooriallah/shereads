@@ -6,6 +6,13 @@
                 <img src="/frontend/assets/images/logo_green.png" alt srcset>
             </header>
 
+            @if (session('message'))
+                <div class="alert mt-4 mb-0 d-inline-block"
+                    style="background: rgba(231, 185, 68, .18); border: 1px solid #E7B944; color: #5F4810;">
+                    {{ session('message') }}
+                </div>
+            @endif
+
             <div class="row mt-5 pt-5">
                 <div class="col-12 gap-4">
                     <h1 class="fw-normal">Answer a few quick questions to

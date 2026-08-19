@@ -40,7 +40,7 @@
                     </form>
 
                     <p class="text-center">
-                        Don't have an account? <a href={{ route('register') }} class="text-decoration-none">Sign up</a>
+                        Don't have an account? <a href="{{ route('startnow') }}" class="text-decoration-none">Sign up</a>
                     </p>
                 </div>
             </div>
