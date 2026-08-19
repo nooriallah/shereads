@@ -189,3 +189,21 @@ p {
 }
 
 
+
+
+/* Checkboxes were inheriting the 48px pill input style above,
+   which made "Remember me" look broken. Real checkbox styling: */
+.signup_form input[type=checkbox] {
+  width: 20px;
+  height: 20px;
+  max-width: 20px;
+  padding: 0;
+  margin-left: .5rem;
+  border-radius: 5px;
+  accent-color: var(--primary, #05653D);
+  cursor: pointer;
+}
+.signup_form label {
+  cursor: pointer;
+  user-select: none;
+}
